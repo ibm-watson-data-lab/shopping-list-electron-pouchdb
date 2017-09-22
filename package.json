@@ -6,12 +6,23 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "clean": "rm -rf dist",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "productName": "Shopping List",
+    "appId": "com.vabarbosa.shoppinglist",
+    "mac": {
+      "category": "Utility"
+    }
   },
   "author": "va@us.ibm.com",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^1.6.11"
+    "electron": "^1.6.11",
+    "electron-builder": "^19.29.1"
   },
   "dependencies": {
     "ibm-shopping-list-model": "^0.2.1",
