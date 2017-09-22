@@ -122,7 +122,7 @@ const updateItemCount = listid => {
     .then(counts => {
       let node = document.getElementById('checked-list-' + sanitize(listid))
       if (node) {
-        node.nextElementSibling.innerText = (counts[0] + ' of ' + counts[1] + ' checked')
+        node.nextElementSibling.innerText = counts[1] ? (counts[0] + ' of ' + counts[1] + ' items checked') : '0 items'
         node.checked = counts[0] && counts[0] === counts[1]
       }
     })
@@ -166,7 +166,6 @@ const closeModal = () => {
     .replace('shopping-list-item-add', '')
     .replace('shopping-list-add', '')
     .replace('shopping-list-settings', '')
-    .replace('shopping-list-sync', '')
     .trim()
 }
 
@@ -179,6 +178,7 @@ const showList = (listid, title, event) => {
       .then(items => {
         document.getElementById('header-title').innerText = title
         document.body.setAttribute('data-list-id', listid)
+        document.body.scrollTop = 0
         items.sort((a, b) => {
           return a.title < b.title
         })
@@ -401,17 +401,16 @@ shopper.sync = callback => {
   }
 }
 
-const indicateOnlineStatus = () => {
-  let nav = document.getElementById('nav')
+const onlineStatusIndicator = () => {
   if (navigator.onLine) {
-    nav.className = nav.className.replace('grey', '').trim()
+    document.body.className = document.body.className.replace('shopping-list-offline', '').trim()
   } else {
-    nav.className += ' grey'
+    document.body.className += ' shopping-list-offline'
   }
 }
 
-window.addEventListener('online', indicateOnlineStatus)
-window.addEventListener('offline', indicateOnlineStatus)
+window.addEventListener('online', onlineStatusIndicator)
+window.addEventListener('offline', onlineStatusIndicator)
 
 shopper(require('./js/shoppinglist.model.js'))
-indicateOnlineStatus()
+onlineStatusIndicator()
