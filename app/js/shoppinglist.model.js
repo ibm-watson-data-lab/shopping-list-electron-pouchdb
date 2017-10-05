@@ -9,9 +9,8 @@ let shoppingListRepository = null
 let db = null
 let dbsync = null
 
-const model = dbname => {
-  db = new PouchDB(dbname || 'shoppinglist')
-  model.db = db
+const model = () => {
+  db = new PouchDB('shoppinglist')
 
   db.info((err, info) => {
     if (err) {
@@ -60,20 +59,6 @@ model.save = doc => {
   }
 }
 
-model.get = id => {
-  if (id) {
-    return shoppingListRepository.get(id)
-      .catch(() => {
-        return shoppingListRepository.getItem(id)
-          .catch(() => {
-            return Promise.reject(new Error(`${id} not found`))
-          })
-      })
-  } else {
-    return Promise.reject(new Error('Missing id'))
-  }
-}
-
 model.remove = id => {
   if (id) {
     return shoppingListRepository.get(id)
@@ -104,8 +89,8 @@ model.items = listid => {
       type: 'item',
       list: listid
     }
-  }).then(listOfGroceriesItems => {
-    return listOfGroceriesItems ? listOfGroceriesItems.valueSeq().toArray() : []
+  }).then(listOfShoppingListItems => {
+    return listOfShoppingListItems ? listOfShoppingListItems.valueSeq().toArray() : []
   })
 }
 
@@ -143,7 +128,13 @@ model.settings = settings => {
     })
     .catch(err => {
       console.warn(err)
-      settings._id = id
+      if (settings) {
+        settings._id = id
+      } else {
+        settings = {
+          _id: '_local/user'
+        }
+      }
       return db.put(settings)
     })
 }

@@ -5,7 +5,7 @@ let model = null
 
 // make doc id friendlier for using as DOM node id
 const sanitize = id => {
-  return id.replace(/(:)/gi, '-')
+  return id.replace(/[:.]/gi, '-')
 }
 
 // focus on title input of the form and move cursor to end of input
@@ -38,8 +38,8 @@ const formFocus = node => {
 }
 
 // add docs to DOM node list (either appending or starting with clean list node)
-const addToDOM = (docs, reset) => {
-  if (reset) {
+const addToDOM = (docs, clear) => {
+  if (clear) {
     if (document.body.getAttribute('data-list-id')) {
       document.getElementById('shopping-list-items').innerHTML = ''
     } else {
@@ -64,8 +64,10 @@ const addToDOM = (docs, reset) => {
     const isList = doc.type === 'list' || doc._id.indexOf('list:') === 0
     let shoppinglists = null
 
-    if (isItem || isList) {
-      shoppinglists = document.getElementById(isItem ? 'shopping-list-items' : 'shopping-lists')
+    if (isList) {
+      shoppinglists = document.getElementById('shopping-lists')
+    } else if (isItem) {
+      shoppinglists = document.getElementById('shopping-list-items')
     } else {
       continue
     }
@@ -73,7 +75,7 @@ const addToDOM = (docs, reset) => {
     doc._sanitizedid = sanitize(doc._id)
     doc._checked = doc.checked ? 'checked="checked"' : ''
 
-    let template = document.getElementById(isItem ? 'shopping-list-item' : 'shopping-list-template').innerHTML
+    let template = document.getElementById(isItem ? 'shopping-list-item-template' : 'shopping-list-template').innerHTML
     template = template.replace(/\{\{(.+?)\}\}/g, ($0, $1) => {
       let fields = ($1).split('.')
       let value = doc
@@ -114,6 +116,11 @@ const removeFromDOM = id => {
   let list = document.getElementById(sanitize(id))
   toggle(list)
   list.parentElement.removeChild(list)
+
+  var listid = document.body.getAttribute('data-list-id')
+  if (listid) {
+    updateItemCount(listid)
+  }
 }
 
 // figure out the checked items count for a list
@@ -163,8 +170,8 @@ const showAddModal = () => {
 
 const closeModal = () => {
   document.body.className = document.body.className
+  .replace('shopping-list-add', '')
     .replace('shopping-list-item-add', '')
-    .replace('shopping-list-add', '')
     .replace('shopping-list-settings', '')
     .trim()
 }
@@ -191,7 +198,7 @@ const showList = (listid, title, event) => {
     const listId = document.body.getAttribute('data-list-id')
     updateItemCount(listId)
     document.body.removeAttribute('data-list-id')
-    document.getElementById('header-title').innerText = 'Shopping List'
+    document.getElementById('header-title').innerText = 'Shopping Lists'
   }
 }
 
@@ -236,8 +243,8 @@ const showSettingsModal = () => {
   formFocus(form)
 }
 
-const shopper = m => {
-  model = shopper.model = m()
+const shopper = themodel => {
+  model = themodel()
   // get settings
   model.settings()
     .then(settings => {
@@ -252,15 +259,13 @@ const shopper = m => {
         console.log('shopper ready!')
       })
     })
-
-  return shopper
 }
 
 shopper.add = event => {
   const form = event.target
   const elements = form.elements
-  const listid = document.body.getAttribute('data-list-id')
   let doc = {}
+  const listid = document.body.getAttribute('data-list-id')
 
   if (!elements['title'].value) {
     console.error('title required')
@@ -298,10 +303,9 @@ shopper.remove = id => {
 }
 
 shopper.update = id => {
-  let elements = null
   const listid = document.body.getAttribute('data-list-id')
-  elements = document.getElementById('form-' + sanitize(id)).elements
-  const checked = document.getElementById('checked-item-' + sanitize(id))
+  let elements = document.getElementById('form-' + sanitize(id)).elements
+
   if (!elements['title'].value) {
     console.error('title required')
   } else {
@@ -310,10 +314,13 @@ shopper.update = id => {
       'title': elements['title'].value,
       'type': listid ? 'item' : 'list'
     }
+
     if (listid) {
+      const checked = document.getElementById('checked-item-' + sanitize(id))
       doc.list = listid
       doc.checked = checked ? !!checked.checked : false
     }
+
     model.save(doc)
       .then(updated => {
         addToDOM([updated])
@@ -354,7 +361,7 @@ shopper.sync = callback => {
       console.error(error)
     }
 
-    shopper.model.lists()
+    model.lists()
       .then(lists => {
         addToDOM(lists, true)
         callback()
@@ -401,16 +408,4 @@ shopper.sync = callback => {
   }
 }
 
-const onlineStatusIndicator = () => {
-  if (navigator.onLine) {
-    document.body.className = document.body.className.replace('shopping-list-offline', '').trim()
-  } else {
-    document.body.className += ' shopping-list-offline'
-  }
-}
-
-window.addEventListener('online', onlineStatusIndicator)
-window.addEventListener('offline', onlineStatusIndicator)
-
 shopper(require('./js/shoppinglist.model.js'))
-onlineStatusIndicator()

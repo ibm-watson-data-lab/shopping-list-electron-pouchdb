@@ -8,116 +8,12 @@ body * {
   box-shadow: none !important;
 }
 
-body[data-list-id] {
-  background-color: #FFFFFF !important;
-}
-
-h5 {
-  font-weight: 300;
-}
-
-.btn-flat {
-  color: #7f91A9;
-}
-.btn-flat:hover {
-  background-color: rgba(0,0,0,0.1);
-}
-
-[type="checkbox"]:checked + label::before {
-  border-right-color: #52647A;
-  border-bottom-color: #52647A;
-}
-
 .primary-color {
   background-color: #52647A !important;
 }
+
 .primary-color * {
   color: #FFFFFF !important;
-}
-.primary-color.lighter {
-  background-color: #7f91A9 !important;
-}
-.primary-color.darker {
-  background-color: #273A4E !important;
-}
-
-.secondary-color {
-  background-color: #FF6CA1 !important;
-}
-.secondary-color * {
-  color: #FFFFFF !important;
-}
-.secondary-color.ligher {
-  background-color: #FF9FD2 !important;
-}
-.secondary-color.darker,
-button.secondary-color:focus,
-button.secondary-color:hover {
-  background-color: #C83873 !important;
-}
-
-.tertiary-color {
-  background-color: #E1E2E1 !important;
-}
-.tertiary-color-lighter {
-  background-color: #F5F5F6 !important;
-}
-
-.primary-text {
-  color: #52647A;
-}
-.primary-text.lighter {
-  color: #7f91A9;
-}
-.primary-text.darker {
-  color: #273A4E;
-}
-
-.secondary-text {
-  color: #FF6CA1;
-}
-.secondary-text.lighter {
-  color: #FF9FD2 !important;
-}
-.secondary-text.darker {
-  color: #C83873;
-}
-
-.tertiary-text {
-  color: #E1E2E1;
-}
-.tertiary-text-lighter {
-  color: #F5F5F6;
-}
-
-body.shopping-list-offline .primary-color,
-body.shopping-list-offline .secondary-color {
-  background-color: #273A4E !important;
-}
-body.shopping-list-offline .primary-color *,
-body.shopping-list-offline .secondary-color * {
-  color: #E1E2E1 !important;
-}
-
-.item-edit form,
-.list-edit form {
-  margin: 15px;
-}
-
-.collapsible {
-  border: 0 none !important;
-}
-
-input:focus:not([disabled]):not([readonly]) {
-  border-bottom-color: #52647A !important;
-}
-
-.goback {
-  visibility: hidden;
-}
-
-body[data-list-id] .goback {
-  visibility: initial;
 }
 
 nav .nav-wrapper {
@@ -128,16 +24,6 @@ main {
   display: flex;
   margin: 0 auto 75px auto;
   width: 200vw;
-}
-
-main #add-button {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-}
-
-main .card {
-  margin: 30px;
 }
 
 #shopping-lists,
@@ -156,6 +42,78 @@ main .card {
   vertical-align: top;
 }
 
+main #add-button {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+}
+
+main .card {
+  margin: 30px;
+}
+
+.secondary-color {
+  background-color: #FF6CA1 !important;
+}
+
+.secondary-color * {
+  color: #000000 !important;
+}
+
+h5 {
+  font-weight: 300;
+}
+
+.btn-flat {
+  color: #7f91A9;
+}
+
+.btn-flat:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+
+input:focus:not([disabled]):not([readonly]) {
+  border-bottom-color: #52647A !important;
+}
+
+body.shopping-list-add .list-bottom-sheet,
+body.shopping-list-item-add .item-bottom-sheet {
+  z-index: 1007;
+  display: block;
+  bottom: 0px;
+  opacity: 1;
+	transition-property: bottom;
+	transition-duration: .75s;
+}
+
+body.shopping-list-add .modal-overlay,
+body.shopping-list-item-add .modal-overlay,
+body.shopping-list-settings .modal-overlay {
+  display: block;
+  opacity: 0.5;
+	transition-property: all;
+	transition-duration: 0.25s;
+  z-index: 1006; 
+}
+
+.collapsible {
+  overflow-y: hidden;
+  margin: 0;
+	max-height: calc(100vh - 65px);
+	transition-property: all;
+	transition-duration: .55s;
+}
+
+.collapsible.closed {
+	max-height: 0;
+	transition-property: all;
+	transition-duration: .15s;
+}
+
+.card.collapsible {
+	transition-duration: 2s;
+}
+
 .list-edit .card-action,
 .item-edit .card-action {
   border: 0 none;
@@ -163,8 +121,9 @@ main .card {
   text-align: right;
 }
 
-#shopping-lists .card-content {
-  cursor: pointer;
+.item-edit form,
+.list-edit form {
+  margin: 15px;
 }
 
 #shopping-list-items .card,
@@ -197,42 +156,8 @@ main .card {
   color: #212121;
 }
 
-.collapsible {
-  overflow-y: hidden;
-  margin: 0;
-	max-height: calc(100vh - 65px);
-	transition-property: all;
-	transition-duration: .55s;
-}
-
-.collapsible.closed {
-	max-height: 0;
-	transition-property: all;
-	transition-duration: .15s;
-}
-
-.card.collapsible {
-	transition-duration: 2s;
-}
-
-body.shopping-list-add .list-bottom-sheet,
-body.shopping-list-item-add .item-bottom-sheet {
-  z-index: 1007;
-  display: block;
-  bottom: 0px;
-  opacity: 1;
-	transition-property: bottom;
-	transition-duration: .75s;
-}
-
-body.shopping-list-add .modal-overlay,
-body.shopping-list-item-add .modal-overlay,
-body.shopping-list-settings .modal-overlay {
-  display: block;
-  opacity: 0.5;
-	transition-property: all;
-	transition-duration: 0.25s;
-  z-index: 1006; 
+body[data-list-id] {
+  background-color: #FFFFFF !important;
 }
 
 body[data-list-id] #shopping-lists,
@@ -240,12 +165,16 @@ body[data-list-id] #shopping-list-items {
   transform: translate(-100vw);
 }
 
-[type="checkbox"]:disabled:not(:checked) + label::before {
-  display: none;
+.goback {
+  visibility: hidden;
 }
 
-.more-btn {
-  padding: 2px 15px;
+body[data-list-id] .goback {
+  visibility: initial;
+}
+
+[type="checkbox"]:disabled:not(:checked) + label::before {
+  display: none;
 }
 
 .modal.top-sheet {
@@ -282,16 +211,6 @@ body.shopping-list-settings .settings-top-sheet {
 #shopping-list-settings .chip {
   display: none;
   font-weight: 300;
-}
-
-body.shopping-list-error-sync nav a.settings:first-of-type,
-body:not(.shopping-list-error-sync) nav a.settings:last-of-type  {
-  display: none;
-}
-
-body:not(.shopping-list-error-sync) nav a.settings:first-of-type,
-body.shopping-list-error-sync nav a.settings:last-of-type  {
-  display: initial;
 }
 
 .shopping-list-error-sync #shopping-list-settings .chip {
@@ -337,4 +256,23 @@ body.shopping-list-error-sync nav a.settings:last-of-type  {
 @keyframes spinanimation {
   from { transform: rotate(0deg) }
   to { transform: rotate(360deg) }
+}
+
+body.shopping-list-error-sync nav a.settings:first-of-type,
+body:not(.shopping-list-error-sync) nav a.settings:last-of-type  {
+  display: none;
+}
+
+body:not(.shopping-list-error-sync) nav a.settings:first-of-type,
+body.shopping-list-error-sync nav a.settings:last-of-type  {
+  display: initial;
+}
+
+body.shopping-list-offline .primary-color,
+body.shopping-list-offline .secondary-color {
+  background-color: #273A4E !important;
+}
+body.shopping-list-offline .primary-color *,
+body.shopping-list-offline .secondary-color * {
+  color: #E1E2E1 !important;
 }

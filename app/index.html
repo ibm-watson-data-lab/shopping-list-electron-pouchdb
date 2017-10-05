@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="iconfont/material-icons.css">
+    <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
     <link rel="stylesheet" href="css/shoppinglist.css">
-    
+
     <title>Shopping List | Electron | PouchDB</title>
   </head>
   <body>
@@ -32,9 +32,11 @@
       <div id="shopping-lists">
         <!-- shopping lists get inserted here -->
       </div>
+
       <ul id="shopping-list-items" class="collection">
         <!-- shopping list items get inserted here -->
       </ul>
+
       <!-- add more stuff button -->
       <button id="add-button" class="btn-floating btn-large secondary-color right" onclick="showAddModal()">
         <i class="material-icons">add</i>
@@ -138,7 +140,7 @@
     </script>
 
     <!-- template: shopping list item -->
-    <script type="text/template" id="shopping-list-item">
+    <script type="text/template" id="shopping-list-item-template">
       <div class="item-view collapsible">
         <input type="checkbox" id="checked-item-{{_sanitizedid}}" name="checked-item-{{_sanitizedid}}" {{_checked}} onclick="shopper.update('{{_id}}')" value="{{title}}" />
         <label for="checked-item-{{_sanitizedid}}">{{title}}</label>
@@ -166,6 +168,19 @@
     </script>
 
     <!-- javascript goodies -->
-    <script src="js/shoppinglist.js"></script>
+    <script>
+        const onlineStatusUpdate = function () {
+          if (navigator.onLine) {
+            document.body.className = document.body.className.replace('shopping-list-offline', '').trim()
+          } else {
+            document.body.className += ' shopping-list-offline'
+          }
+        }
+  
+        window.addEventListener('online',  onlineStatusUpdate)
+        window.addEventListener('offline',  onlineStatusUpdate)
+        onlineStatusUpdate()
+      </script>
+      <script src="js/shoppinglist.js"></script>
   </body>
 </html>

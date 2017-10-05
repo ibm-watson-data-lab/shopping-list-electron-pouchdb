@@ -1,6 +1,6 @@
 # Shopping List - with Electron and PouchDB 
 
-**Note:** This is a work in progress. 
+<strong style="color:red">Note</strong>: This is a work in progress. 
 
 This Shopping List is an Offline First demo application built using [PouchDB](https://pouchdb.com/) with the Electron framework. [This app is part of a series of Offline First demo apps, each built using a different stack.](https://github.com/ibm-watson-data-lab/shopping-list) 
 
@@ -42,3 +42,7 @@ Shopping List is a simple demo app, with a limited feature set. Here is a list o
 - http://materializecss.com/ - Materialize CSS
 - https://pouchdb.com/ - PouchDB library
 - https://usecuid.org/ - Collision-resistant ids
+
+## Tutorial
+
+Refer to the [tutorial](tutorial) for step-by-step instructions on how to build your own Offline First shopping list desktop app with Electron and PouchDB.

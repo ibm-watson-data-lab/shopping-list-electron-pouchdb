@@ -21,11 +21,12 @@
   "author": "va@us.ibm.com",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^1.6.11",
+    "electron": "^1.7.8",
     "electron-builder": "^19.29.1"
   },
   "dependencies": {
     "ibm-shopping-list-model": "^0.2.1",
+    "materialize-css": "^0.100.2",
     "pouchdb-browser": "^6.3.4",
     "pouchdb-find": "^6.3.4"
   }
