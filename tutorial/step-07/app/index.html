@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+    <link rel="stylesheet" href="iconfont/material-icons.css">
+    <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="shoppinglist.css">
+    
+    <title>Shopping List | Electron | PouchDB</title>
+  </head>
+  <body>
+
+    <!-- banner -->
+    <header class="navbar-fixed">
+      <nav id="nav" class="primary-color">
+        <div class="nav-wrapper">
+          <span class="brand-logo left">
+            <a href="#" onclick="showList(); return false" class="goback"><i class="material-icons">arrow_back</i></a>
+            <span id="header-title">Shopping Lists</span>
+          </span>
+          <!-- settings button -->
+          <a href="#" onclick="showSettingsModal(); return false" class="right settings"><i class="material-icons">settings</i></a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- content area -->
+    <main>
+      <div id="shopping-lists">
+        <!-- shopping lists get inserted here -->
+      </div>
+
+      <ul id="shopping-list-items" class="collection">
+        <!-- shopping list items get inserted here -->
+      </ul>
+
+      <!-- add more stuff button -->
+      <button id="add-button" class="btn-floating btn-large secondary-color right" onclick="showAddModal()">
+        <i class="material-icons">add</i>
+      </button>
+    </main>
+
+    <!-- modal: add a shopping list form -->
+    <div class="modal bottom-sheet list-bottom-sheet">
+      <form id="shopping-list-add" class="col s12 white" onsubmit="shopper.add(event); return false">
+        <div class="modal-content">
+            <h5>Create a Shopping List</h5>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input name="title" type="text" class="validate" placeholder="Enter a title for the shopping list" required />
+                </div>
+                <input name="type" type="hidden" value="list">
+              </div>
+        </div>
+        <div class="modal-footer primary-color">
+          <button class="btn-flat" type="button" onclick="closeModal()">Cancel</button>
+          <button class="btn-flat" type="submit">Add</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- modal: add a shopping list item form -->
+    <div class="modal bottom-sheet item-bottom-sheet">
+      <form id="shopping-list-item-add" class="col s12 white" onsubmit="shopper.add(event); return false">
+        <div class="modal-content">
+          <h5>Add an Item</h5>
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="title" type="text" class="validate" placeholder="Enter an item to add to the shopping list" required />
+            </div>
+            <input name="type" type="hidden" value="item">
+          </div>
+        </div>
+        <div class="modal-footer primary-color">
+          <button class="btn-flat" type="button" onclick="closeModal()">Cancel</button>
+          <button class="btn-flat" type="submit">Add</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- modal: add a shopping list settings form -->
+    <div class="modal top-sheet settings-top-sheet">
+      <form id="shopping-list-settings" class="col s12 white" onsubmit="shopper.settings(event); return false">
+        <div class="modal-content">
+            <h5>Shopping Lists Settings</h5>
+              <div class="row">
+                <div class="input-field col s12">
+                  <span class="primary-text darker">Enter a fully qualified URL (including username and password) to a remote IBM Cloudant, Apache CouchDB, or PouchDB database to sync your shopping list.</span>
+                  <input name="remoteDB" type="url" class="validate" placeholder="https://username:password@localhost:5984/database" />
+                  <div class="chip"></div>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer secondary-color">
+          <button class="btn-flat" type="button" onclick="closeModal()">Cancel</button>
+          <button class="btn-flat" type="submit">Sync</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- modal: overlay -->
+    <div class="modal-overlay" onclick="closeModal()"></div>
+
+    <!-- template: shopping list -->
+    <script type="text/template" id="shopping-list-template">
+      <div class="list-view collapsible">
+        <div class="card-content" onclick="showList('{{_id}}', '{{title}}', event)">
+          <span class="card-title activator">{{title}}
+            <button class="btn-flat more-btn right" onclick="toggle('{{_sanitizedid}}', event)"><i class="material-icons">more_vert</i></button>
+          </span>
+        </div>
+        <div class="card-action">
+          <input type="checkbox" id="checked-list-{{_sanitizedid}}" name="checked-list-{{_sanitizedid}}" {{_checked}} disabled />
+          <label for="checked-list-{{_sanitizedid}}">0 items in list</label>
+        </div>
+      </div>
+      <div class="list-edit collapsible closed">
+        <form id="form-{{_sanitizedid}}" class="col s12 white" onsubmit="shopper.update('{{_id}}', event); return false">
+          <div class="card-content">
+            <span class="card-title">
+              <button id="close-{{_sanitizedid}}" type="button" class="btn-flat more-btn right" onclick="toggle('{{_sanitizedid}}', event)"><i class="material-icons">close</i></button>
+            </span>
+            <h5>Edit Shopping List</h5>
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="title" type="text" class="validate" value="{{title}}" placeholder="{{title}}" required />
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <button class="btn-flat" type="button" onclick="shopper.remove('{{_id}}')">Remove</button>
+            <button class="btn-flat" type="submit">Update</button>
+          </div>
+        </form>
+      </div>
+    </script>
+
+    <!-- template: shopping list item -->
+    <script type="text/template" id="shopping-list-item-template">
+      <div class="item-view collapsible">
+        <input type="checkbox" id="checked-item-{{_sanitizedid}}" name="checked-item-{{_sanitizedid}}" {{_checked}} onclick="shopper.update('{{_id}}')" value="{{title}}" />
+        <label for="checked-item-{{_sanitizedid}}">{{title}}</label>
+        <button class="btn-flat more-btn right" onclick="toggle('{{_sanitizedid}}', event)"><i class="material-icons">more_vert</i></button>
+      </div>
+      <div class="item-edit collapsible closed">
+        <form id="form-{{_sanitizedid}}" class="col s12 tertiary lighter" onsubmit="shopper.update('{{_id}}', event); return false">
+          <div>
+            <span class="card-title">
+              <button id="close-{{_sanitizedid}}" type="button" class="btn-flat more-btn right" onclick="toggle('{{_sanitizedid}}', event)"><i class="material-icons">close</i></button>
+            </span>
+            <h5>Edit Item</h5>
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="title" type="text" class="validate" value="{{title}}" placeholder="{{title}}" required />
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <button class="btn-flat" type="button" onclick="shopper.remove('{{_id}}')">Remove</button>
+            <button class="btn-flat" type="submit">Update</button>
+          </div>
+        </form>
+      </div>
+    </script>
+
+    <!-- javascript goodies -->
+    <script src="shoppinglist.js"></script>
+  </body>
+</html>

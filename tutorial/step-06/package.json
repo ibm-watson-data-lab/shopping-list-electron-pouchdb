@@ -1,0 +1,20 @@
+{
+  "name": "shopping-list-electron-pouchdb",
+  "version": "0.0.1",
+  "description": "An Offline First demo of a shopping list using Electron and PouchDB",
+  "productName": "Shopping List",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "ibm-shopping-list-model": "^0.2.6",
+    "materialize-css": "^0.100.2",
+    "pouchdb-browser": "^6.3.4",
+    "pouchdb-find": "^6.3.4"
+  },
+  "devDependencies": {
+    "electron": "^1.7.8"
+  }
+}
