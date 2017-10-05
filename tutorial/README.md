@@ -1286,7 +1286,10 @@ At this stage, you have a full functioning shopping list desktop application. Ho
 Try it! 
 
 * Close your application
-* Delete the Electron app cache (`/Users/<user>/Library/Application Support/<yourAppName>`)
+* Delete the Electron app cache
+	* Windows: `C:\Users\<user>\AppData\Roaming\<yourAppName>`
+	* Linux: `/home/<user>/.config/<yourAppName>`
+	* OS X: `/Users/<user>/Library/Application Support/<yourAppName>`
 * Disconnect from the network
 * Launch your shopping list app
 
